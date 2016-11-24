@@ -8,10 +8,10 @@ and use acme-tiny to retrieve new, valid certificates.
 Defaults
 --------
 
-- `/etc/acme-tiny-wrapper/acme-tiny.cfg` contains the configuration
-- `/etc/acme-tiny-wrapper/account.key` is the Let's encrypt account key
-- `/etc/acme-tiny-wrapper/csr/` Dais the location of the certificate requests to use
-- `/var/lib/acme-tiny-wrapper/` is used as work directory
+- `/etc/acme-tiny/acme-tiny.cfg` contains the configuration
+- `/etc/acme-tiny/account.key` is the Let's encrypt account key
+- `/etc/acme-tiny/csr/` Dais the location of the certificate requests to use
+- `/var/lib/acme-tiny/` is used as work directory
 - `/srv/www/acme-challenges/` is the default challenge directory
 
 Configuration
@@ -44,19 +44,19 @@ Next we will generate an account key for Let's Encrypt and copy this to the
 `acme-tiny-wrapper` configuration directory.:
 
     openssl genrsa 4096 > account.key
-    cp account.key /etc/acme-tiny-wrapper/account.key
+    cp account.key /etc/acme-tiny/account.key
 
 Then, generate a certificate request and place it in
-`/etc/acme-tiny-wrapper/csr/`
+`/etc/acme-tiny/csr/`
 
     openssl genrsa 4096 > test.example.com.key
     openssl req -new -sha256 -key test.example.com.key -subj "/CN=test.example.com" > test.example.com.csr
-    cp test.example.com.csr /etc/acme-tiny-wrapper/csr/
+    cp test.example.com.csr /etc/acme-tiny/csr/
 
 Finally, you should specify the output location for the generated certificate.
 You can do that for each certificate by creating a location file:
 
-    echo /etc/nginx/ssl/certs > /etc/acme-tiny-wrapper/csr/test.example.com.location
+    echo /etc/nginx/ssl/certs > /etc/acme-tiny/csr/test.example.com.location
 
 or by specifying the `DEFAULT_LOCATION` in the `acme-tiny.cfg`.
 

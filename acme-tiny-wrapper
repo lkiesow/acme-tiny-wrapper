@@ -2,8 +2,8 @@
 
 set -e
 
-[ -z "$DATADIR" ] && DATADIR="/var/lib/acme-tiny-wrapper"
-[ -z "$CONFIG" ] && CONFIG="/etc/acme-tiny-wrapper"
+[ -z "$DATADIR" ] && DATADIR="/var/lib/acme-tiny"
+[ -z "$CONFIG" ] && CONFIG="/etc/acme-tiny"
 [ -z "$ACME_TINY_BIN" ] && ACME_TINY_BIN="acme-tiny"
 
 CONFIGFILE="$CONFIG/acme-tiny.cfg"
