@@ -4,5 +4,5 @@ Description=Update SSL certificates using acme-tiny
 [Service]
 Type=oneshot
 ExecStart=/opt/acme-tiny-wrapper/acme-tiny-wrapper
-User=acme-tiny
+User=acme
 PermissionsStartOnly=true
