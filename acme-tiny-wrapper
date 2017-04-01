@@ -2,13 +2,13 @@
 
 set -e
 
-[ -z "$DATADIR" ] && DATADIR="/var/lib/acme-tiny"
-[ -z "$CONFIG" ] && CONFIG="/etc/acme-tiny"
-[ -z "$ACME_TINY_BIN" ] && ACME_TINY_BIN="acme-tiny"
+DATADIR="/var/lib/acme-tiny"
+CONFIG="/etc/acme-tiny"
+ACME_TINY_BIN="acme-tiny"
 
 CONFIGFILE="$CONFIG/acme-tiny.cfg"
 [ -e $CONFIGFILE ] && source "$CONFIGFILE"
-[ -z "$ACME_DIR" ] && ACME_DIR="/srv/www/acme-challenges/"
+[ -z "$ACME_DIR" ] && ACME_DIR="/var/www/acme-challenges/"
 
 ACCOUNT_KEY="${CONFIG}/account.key"
 INTERMEDIATE="${DATADIR}/intermediate.pem"
@@ -23,17 +23,18 @@ do
     CERT="${work_dir}/cert.pem"
     FULLCHAIN="${work_dir}/fullchain.pem"
 
-    mkdir -p "$work_dir"
+    mkdir -p "${work_dir}"
 
-    ${ACME_TINY_BIN} --account-key "$ACCOUNT_KEY" --csr "$csr" --acme-dir "$ACME_DIR" > "${CERT}.tmp"
+    ${ACME_TINY_BIN} --account-key "$ACCOUNT_KEY" \
+		 --csr "$csr" --acme-dir "$ACME_DIR" > "${CERT}.tmp"
     mv -f "${CERT}.tmp" "${CERT}"
     cat "${CERT}" "${INTERMEDIATE}" > "${FULLCHAIN}"
 
     # Check for location specification
     if [ -e "${name%.csr}.location" ]; then
-       cp "${FULLCHAIN}" "$(cat "${name%.csr}.location")"
+       cp "${FULLCHAIN}" "$(cat "${name}.location")"
     elif [ -n "${DEFAULT_LOCATION}" ]; then
-       cp "${FULLCHAIN}" "${DEFAULT_LOCATION}"
+       cp "${FULLCHAIN}" "${DEFAULT_LOCATION}/${name}.crt"
     fi
 
 done
