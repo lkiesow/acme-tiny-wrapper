@@ -3,6 +3,6 @@ Description=Update SSL certificates using acme-tiny
 
 [Service]
 Type=oneshot
-ExecStart=/opt/acme-tiny-wrapper/acme-tiny-wrapper
+ExecStart=/usr/libexec/acme-tiny-wrapper/acme-tiny-wrapper
 User=acme
 PermissionsStartOnly=true
