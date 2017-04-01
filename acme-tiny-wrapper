@@ -10,11 +10,27 @@ CONFIGFILE="$CONFIG/acme-tiny.cfg"
 [ -e $CONFIGFILE ] && source "$CONFIGFILE"
 [ -z "$ACME_DIR" ] && ACME_DIR="/var/www/acme-challenges/"
 
-ACCOUNT_KEY="${CONFIG}/account.key"
+ACCOUNT_KEY="${DATADIR}/account.key"
 INTERMEDIATE="${DATADIR}/intermediate.pem"
 
-curl -o "${INTERMEDIATE}" https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem
+# Get intermediate certificate
+if curl -f -o "${INTERMEDIATE}.tmp" https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem; then
+    mv "${INTERMEDIATE}.tmp" "${INTERMEDIATE}"
+else
+    rm -f "${INTERMEDIATE}.tmp"
+    # Allow curl to fail if there is already an intermediate certificate
+	 test -s "${INTERMEDIATE}"
+fi
 
+# Generate account key if necessary
+if ! test -s "${ACCOUNT_KEY}"; then
+  touch "${ACCOUNT_KEY}"
+  chmod 0600 "${ACCOUNT_KEY}"
+  openssl genrsa 4096 > "${ACCOUNT_KEY}"
+  chmod 0400 "${ACCOUNT_KEY}"
+fi
+
+# Request certificates
 for csr in ${CONFIG}/csr/*.csr
 do
     name="$(basename "$csr")"
